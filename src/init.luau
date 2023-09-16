@@ -16,7 +16,10 @@ DictionaryPathUtil.SEPARATOR = "/"
 function DictionaryPathUtil.get(dict: {[string]: any}, path: string): any?
 	local keys = path:split(DictionaryPathUtil.SEPARATOR)
 	local function get(source: any, index: number): any
-		local key = keys[index]
+		local key: any = keys[index]
+		if tonumber(key) and source[tonumber(key)] then
+			key = tonumber(key)
+		end
 		if index == #keys then
 			return source[key]
 		else
@@ -67,7 +70,10 @@ end
 function DictionaryPathUtil.set(dict: {[string]: any}, path: string, value: any?): ()
 	local keys = path:split(DictionaryPathUtil.SEPARATOR)
 	local function set(source: any, index: number): ()
-		local key = keys[index]
+		local key: any = keys[index]
+		if tonumber(key) then
+			key = tonumber(key)
+		end
 		if index == #keys then
 			source[key] = value
 		else
