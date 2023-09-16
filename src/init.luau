@@ -13,14 +13,18 @@ local _Packages = _Package.Parent
 local DictionaryPathUtil = {}
 DictionaryPathUtil.SEPARATOR = "/"
 
-function DictionaryPathUtil.get(dict: {[string]: any}, path: string): any
+function DictionaryPathUtil.get(dict: {[string]: any}, path: string): any?
 	local keys = path:split(DictionaryPathUtil.SEPARATOR)
 	local function get(source: any, index: number): any
 		local key = keys[index]
 		if index == #keys then
 			return source[key]
 		else
-			return get(source[key], index+1)
+			if source[key] then
+				return get(source[key], index+1)
+			else
+				return nil
+			end
 		end
 	end
 	return get(dict, 1)
@@ -67,6 +71,9 @@ function DictionaryPathUtil.set(dict: {[string]: any}, path: string, value: any?
 		if index == #keys then
 			source[key] = value
 		else
+			if not source[key] then
+				source[key] = {}
+			end
 			set(source[key], index+1)
 		end
 	end
